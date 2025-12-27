@@ -1,0 +1,28 @@
+
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    networks:
+      - microservice
+
+  ordering-service:
+    build: ./order_service
+    container_name: ordering-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - rabbitmq
+    networks:
+      - microservice
+
+networks:
+  microservice:
+    driver: bridge
