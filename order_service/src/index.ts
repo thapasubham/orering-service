@@ -1,12 +1,14 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { orderRoute } from './route/order.route.js';
-function startServer() {
+import { rabbitclient } from './client/rabbitmq.client.js';
+import { startOrderConsumer } from './rabbitmq/order.consume.js';
+async function startServer() {
   const app = express();
 
   app.use(express.json());
-
+  rabbitclient.connect();
   app.use('/api/order', orderRoute);
-
+  await startOrderConsumer();
   app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     console.error('Unhandled error:', err);
     res.status(500).json({

@@ -1,3 +1,4 @@
+import { publish } from '../rabbitmq/publisher.js';
 import { OrderRepository } from '../repository/order.repository.js';
 import { Order } from '../types/order.types.js';
 
@@ -12,6 +13,6 @@ export class OrderService {
   }
 
   async CreateOrder(order: Order) {
-    return await this.orderRepo.CreateOrder(order);
+    publish<Order>('create.order', order);
   }
 }

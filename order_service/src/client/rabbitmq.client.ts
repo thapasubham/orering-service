@@ -9,7 +9,10 @@ class RabbitClient {
     this.channel = await client.createChannel();
     console.log('Connected to RabbitMQ');
   }
-  getChanel() {
+  async getChannel() {
+    if (!this.channel) {
+      await this.connect();
+    }
     return this.channel;
   }
 }
